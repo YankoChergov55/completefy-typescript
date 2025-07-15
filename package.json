@@ -7,12 +7,17 @@
 		"dev": "npm run type-check && nodemon src/app.ts"
 	},
 	"dependencies": {
+		"cookie-parser": "^1.4.7",
+		"cors": "^2.8.5",
 		"dotenv": "^17.2.0",
 		"express": "^5.1.0",
+		"helmet": "^8.1.0",
 		"mongoose": "^8.16.3"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.31.0",
+		"@types/cookie-parser": "^1.4.9",
+		"@types/cors": "^2.8.19",
 		"@types/express": "^5.0.3",
 		"@types/mongoose": "^5.11.96",
 		"@types/node": "^24.0.14",
@@ -21,12 +26,16 @@
 		"eslint-plugin-prettier": "^5.5.1",
 		"globals": "^16.3.0",
 		"nodemon": "^3.1.10",
+		"pino": "^9.7.0",
+		"pino-http": "^10.5.0",
+		"pino-pretty": "^13.0.0",
 		"prettier": "^3.6.2",
 		"tsx": "^4.20.3",
 		"typescript": "^5.8.3",
 		"typescript-eslint": "^8.37.0"
 	},
 	"prettier": {
-		"useTabs": true
+		"useTabs": true,
+		"printWidth": 150
 	}
 }
