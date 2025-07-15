@@ -5,6 +5,8 @@ import cors from "cors";
 import helmet from "helmet";
 import httpLogger from "./middleware/httpLogger.js";
 import errorHandler from "./middleware/errorHandler.js";
+import connectDB from "./config/db.js";
+import logger from "./utils/logger.js";
 
 const app: Application = express();
 
@@ -26,5 +28,6 @@ app.get("/", (req: Request, res: Response) => {
 app.use(errorHandler);
 
 app.listen(appConfig.port, () => {
-	console.log(`server running on port ${appConfig.port}`);
+	connectDB();
+	logger.info(`server running on port ${appConfig.port}`);
 });
