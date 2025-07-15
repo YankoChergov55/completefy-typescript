@@ -7,6 +7,7 @@ import httpLogger from "./middleware/httpLogger.js";
 import errorHandler from "./middleware/errorHandler.js";
 import connectDB from "./config/db.js";
 import logger from "./utils/logger.js";
+import todoRoutes from "./todos/todoRoutes.js";
 
 const app: Application = express();
 
@@ -24,6 +25,8 @@ app.get("/", (req: Request, res: Response) => {
 		message: "welcome to the ts api",
 	});
 });
+
+app.use("/api/todos", todoRoutes);
 
 app.use(errorHandler);
 
