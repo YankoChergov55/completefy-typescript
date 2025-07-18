@@ -67,15 +67,13 @@ export const updateTodo = async (req: Request<{ id: string }>, res: Response<Api
 		const id = req.params.id;
 		const update = req.body;
 
-		const foundTodo = await Todo.findById(id);
-
-		if (!foundTodo) {
-			throw new AppError("todo not found, try with another link", 404);
-		}
-
 		const updatedTodo = await Todo.findByIdAndUpdate(id, update, {
 			new: true,
 		});
+
+		if (!updatedTodo) {
+			throw new AppError("todo not found, try with another link", 404);
+		}
 
 		res.status(200).json({
 			status: 200,
@@ -92,18 +90,19 @@ export const updateTodo = async (req: Request<{ id: string }>, res: Response<Api
 export const deleteTodo = async (req: Request<{ id: string }>, res: Response<ApiResponse<ITodo>>, next: NextFunction) => {
 	try {
 		const id = req.params.id;
-		const foundTodo = await Todo.findById(id);
-		if (!foundTodo) {
+
+		const deletedTodo = await Todo.findByIdAndDelete(id);
+
+		if (!deletedTodo) {
 			throw new AppError("todo not found, try with another link", 404);
 		}
 
-		const deletedTodo = await Todo.findByIdAndDelete(id);
-		res.status(200).json({
-			status: 200,
+		res.status(204).json({
+			status: 204,
 			success: true,
 			message: "deleted a todo",
 			data: deletedTodo,
-		} as ApiResponse<ITodo>);
+		});
 	} catch (error) {
 		next(error);
 	}
