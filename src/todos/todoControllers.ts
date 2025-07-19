@@ -4,9 +4,10 @@ import AppError from "../utils/appError.js";
 import { ITodo } from "../types/Itodo.js";
 import { ApiResponse } from "../types/apiResponse.js";
 import { HydratedDocument } from "mongoose";
+import { createTodoInput, updateTodoInput } from "./todoValidators.js";
 
 //create a todo controller
-export const createTodo = async (req: Request<{}, {}, ITodo>, res: Response<ApiResponse<HydratedDocument<ITodo>>>, next: NextFunction) => {
+export const createTodo = async (req: Request<{}, {}, createTodoInput>, res: Response<ApiResponse<HydratedDocument<ITodo>>>, next: NextFunction) => {
 	try {
 		const newTodo = req.body;
 
@@ -62,7 +63,7 @@ export const getSingleTodo = async (req: Request<{ id: string }>, res: Response<
 };
 
 //update a todo
-export const updateTodo = async (req: Request<{ id: string }>, res: Response<ApiResponse<ITodo>>, next: NextFunction) => {
+export const updateTodo = async (req: Request<{ id: string }, {}, updateTodoInput>, res: Response<ApiResponse<ITodo>>, next: NextFunction) => {
 	try {
 		const id = req.params.id;
 		const update = req.body;

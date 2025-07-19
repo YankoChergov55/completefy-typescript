@@ -5,27 +5,25 @@ import { hasStatusAndMessage, isMongooseError } from "../utils/typeGuards.js";
 const errorHandler: ErrorRequestHandler = (err, req: Request, res: Response, next) => {
 	logger.error(err);
 
-	let statusCode;
-	let message;
+	let statusCode = 500;
+	let message = "Something went wrong";
+	let details;
 
 	if (hasStatusAndMessage(err)) {
 		statusCode = err.status;
 		message = err.message;
+		details = (err as any).details;
 	} else if (isMongooseError(err)) {
 		statusCode = 400;
-		message = `MongoDB cannot accespt this data: ${err}`;
-	} else {
-		statusCode = 500;
-		message = "Something went wrong";
+		message = `MongoDB error: ${err.message}`;
 	}
 
-	const errResponse = {
+	return res.status(statusCode).json({
 		success: false,
 		message,
 		statusCode,
-	};
-
-	return res.status(statusCode).json(errResponse);
+		...(details && { details }),
+	});
 };
 
 export default errorHandler;
