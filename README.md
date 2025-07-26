@@ -6,7 +6,7 @@ A TypeScript-based REST API that manages Todos. This project is designed to buil
 
 **Completefy** is a **Practice Project** — its goal is to reinforce essential backend concepts in a focused, hands-on way.
 
-Think of it as your training ground before entering the deeper layers of production-ready systems.
+Training ground before entering the deeper layers of production-ready systems.
 
 ## 🧱 Tech Stack
 
@@ -35,6 +35,9 @@ Think of it as your training ground before entering the deeper layers of product
 - [x] **Basic HTTP Logging** using `pino-http`
 - [x] **ESLint + Prettier Configuration**
 - [x] **Environment Config** via dotenv
+- [x] Refactored controller to use **TodoService module** for db actions
+- [x] Request **validation** with Zod
+- [x] **Filter + Sort + Pagination**
 
 ## 📁 Folder Overview
 
@@ -52,11 +55,5 @@ src/
 
 ## 📜 Scripts
 
-- `npm run dev` — start dev server with `nodemon` and `tsx`
 - `npm run type-check` — run TypeScript compiler in check mode
-
-## 🛣 Planned (Optional)
-
-- [ ] Request validation (e.g., Zod or Joi)
-- [ ] Basic auth (JWT or sessions)
-- [ ] Jest + Supertest setup for basic tests
+- `npm run dev` — `type check` and then start dev server with `nodemon` and `tsx`
