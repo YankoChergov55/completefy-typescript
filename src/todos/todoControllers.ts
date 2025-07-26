@@ -1,17 +1,17 @@
 import Todo from "./todoSchema.js";
 import { Request, Response, NextFunction } from "express";
-import AppError from "../utils/appError.js";
 import { ITodo } from "../types/Itodo.js";
 import { ApiResponse } from "../types/apiResponse.js";
 import { HydratedDocument } from "mongoose";
 import { createTodoInput, updateTodoInput } from "./todoValidators.js";
+import * as todoService from "./todoService.js";
 
 //create a todo controller
 export const createTodo = async (req: Request<{}, {}, createTodoInput>, res: Response<ApiResponse<HydratedDocument<ITodo>>>, next: NextFunction) => {
 	try {
 		const newTodo = req.body;
 
-		const createdTodo = await Todo.create(newTodo);
+		const createdTodo = await todoService.createTodo(newTodo);
 
 		res.status(200).json({
 			status: 200,
@@ -45,11 +45,7 @@ export const getSingleTodo = async (req: Request<{ id: string }>, res: Response<
 	try {
 		const id = req.params.id;
 
-		const foundTodo = await Todo.findById(id);
-
-		if (!foundTodo) {
-			throw new AppError("todo not found, try with another link", 404);
-		}
+		const foundTodo = await todoService.getTodoById(id);
 
 		res.status(200).json({
 			status: 200,
@@ -68,20 +64,14 @@ export const updateTodo = async (req: Request<{ id: string }, {}, updateTodoInpu
 		const id = req.params.id;
 		const update = req.body;
 
-		const updatedTodo = await Todo.findByIdAndUpdate(id, update, {
-			new: true,
-		});
-
-		if (!updatedTodo) {
-			throw new AppError("todo not found, try with another link", 404);
-		}
+		const updatedTodo = await todoService.updateTodo(id, update);
 
 		res.status(200).json({
 			status: 200,
 			success: true,
 			message: "updated a todo",
 			data: updatedTodo,
-		} as ApiResponse<ITodo>);
+		});
 	} catch (error) {
 		next(error);
 	}
@@ -92,11 +82,7 @@ export const deleteTodo = async (req: Request<{ id: string }>, res: Response<Api
 	try {
 		const id = req.params.id;
 
-		const deletedTodo = await Todo.findByIdAndDelete(id);
-
-		if (!deletedTodo) {
-			throw new AppError("todo not found, try with another link", 404);
-		}
+		const deletedTodo = await todoService.deleteTodo(id);
 
 		res.status(204).json({
 			status: 204,
