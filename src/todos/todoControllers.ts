@@ -5,6 +5,7 @@ import { ApiResponse } from "../types/apiResponse.js";
 import { HydratedDocument } from "mongoose";
 import { createTodoInput, updateTodoInput } from "./todoValidators.js";
 import * as todoService from "./todoService.js";
+import { buildTodoQuery } from "../utils/buildTodoQuery.js";
 
 //create a todo controller
 export const createTodo = async (req: Request<{}, {}, createTodoInput>, res: Response<ApiResponse<HydratedDocument<ITodo>>>, next: NextFunction) => {
@@ -27,13 +28,21 @@ export const createTodo = async (req: Request<{}, {}, createTodoInput>, res: Res
 //get todos
 export const getAllTodos = async (req: Request, res: Response<ApiResponse<ITodo[]>>, next: NextFunction) => {
 	try {
-		const todos = await Todo.find({});
+		const { filter, options } = buildTodoQuery(req.query);
+
+		const data = await todoService.getTodos(filter, options);
 
 		res.status(200).json({
 			status: 200,
 			success: true,
 			message: "list of todos",
-			data: todos,
+			data: data.results,
+			meta: {
+				total: data.total,
+				page: data.page,
+				limit: data.limit,
+				totalPages: data.totalPages,
+			},
 		});
 	} catch (error) {
 		next(error);

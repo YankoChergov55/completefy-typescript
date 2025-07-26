@@ -1,6 +1,7 @@
 import Todo from "./todoSchema.js";
 import AppError from "../utils/appError.js";
 import { createTodoInput, updateTodoInput } from "./todoValidators.js";
+import { TodoFilter, QueryOptions } from "../types/todoFilter.js";
 
 export const createTodo = async (data: createTodoInput) => {
 	return await Todo.create(data);
@@ -34,4 +35,29 @@ export const deleteTodo = async (id: string) => {
 	}
 
 	return deleted;
+};
+
+export const getTodos = async (filter: TodoFilter = {}, options: QueryOptions = {}) => {
+	const page = options.page || 1;
+	const limit = options.limit || 10;
+	const skip = (page - 1) * limit;
+
+	let sort: Record<string, 1 | -1> = {};
+
+	if (options.sort) {
+		const [field, order] = options.sort.split(":");
+		sort[field] = order === "desc" ? -1 : 1;
+	}
+
+	const query = Todo.find(filter).sort(sort).skip(skip).limit(limit);
+
+	const [results, total] = await Promise.all([query, Todo.countDocuments(filter)]);
+
+	return {
+		results,
+		total,
+		page,
+		limit,
+		totalPages: Math.ceil(total / limit),
+	};
 };
